@@ -6,6 +6,7 @@ import com.example.netlibrary.data.repository.PBRepository
 import com.example.netlibrary.domain.repository.Repository
 import com.example.netlibrary.network.IsConnect
 import com.example.netlibrary.network.NetworkMonitor
+import com.example.regprofi26_matule.Domain.UseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -21,7 +22,7 @@ val networkModule = module{
         androidContext()
     ) }
 
-
+    factory { UseCase(get()) }
 
 
 }
