@@ -27,4 +27,7 @@ object UserRepository {
         get() = actSystem.getString("Email","")!!
         set(value) = actSystem.edit().putString("Email", value).apply()
 
+    var Pin: String
+        get() = actSystem.getString("pin_code","")!!
+        set(value) = actSystem.edit().putString("pin_code", value).apply()
 }

@@ -1,0 +1,19 @@
+package com.example.regprofi26_matule.Presentation.Navigation
+
+object NavigationRoutes {
+
+    const val SPLASH = "Splash"
+
+    const val REG = "Registration"
+
+    const val AUTH = "Authentification"
+
+    const val CREATE_PASS = "CreatePassword"
+
+    const val CREATE_USER = "CreateUser"
+
+    const val CREATE_PIN = "CreatePin"
+
+    const val INPUT_CODE = "InputEmailCode"
+
+}
