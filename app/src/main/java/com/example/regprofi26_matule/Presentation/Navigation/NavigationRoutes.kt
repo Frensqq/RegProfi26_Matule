@@ -16,4 +16,6 @@ object NavigationRoutes {
 
     const val INPUT_CODE = "InputEmailCode"
 
+    const val INPUT_PIN = "InputPin"
+
 }
