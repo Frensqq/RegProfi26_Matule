@@ -5,6 +5,7 @@ object NavigationRoutes {
     const val SPLASH = "Splash"
 
     const val REG = "Registration"
+    const val MAIN = "MainScreen"
 
     const val AUTH = "Authentification"
 

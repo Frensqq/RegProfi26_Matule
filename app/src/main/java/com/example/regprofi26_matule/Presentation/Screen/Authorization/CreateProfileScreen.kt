@@ -104,7 +104,7 @@ fun CreateProfileScreen(navController: NavHostController, viewModel: AuthViewMod
         contentAlignment = Alignment.BottomCenter) {
         ButtonBig("Создать",
             {
-                navController.navigate(NavigationRoutes.INPUT_CODE)
+                navController.navigate(NavigationRoutes.MAIN)
             },stateButton
             )
     }
