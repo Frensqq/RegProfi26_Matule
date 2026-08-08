@@ -15,4 +15,11 @@ data class AuthState (
     val passwordConfirm: String = password,
 
     var user: User? =  null,
+
+    val name: String= "",
+    val surname: String = "",
+    val patronymic: String = "",
+    val tg: String = "",
+    val dateUser: String = "",
+    val gender: String = ""
 )

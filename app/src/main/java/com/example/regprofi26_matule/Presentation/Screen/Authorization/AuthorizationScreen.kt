@@ -35,7 +35,7 @@ import com.example.uikit.UI.SpacerW
 import com.example.uikit.UI.createMatuleTypography
 
 @Composable
-fun AuthorizationScreen(viewModel: AuthViewModel, navigate: NavHostController){
+fun AuthorizationScreen(viewModel: AuthViewModel, navController: NavHostController){
 
     val state = viewModel.state
     var errorEmail by remember { mutableStateOf("") }
@@ -86,15 +86,15 @@ fun AuthorizationScreen(viewModel: AuthViewModel, navigate: NavHostController){
 
         ButtonBig("Далее",
             {
-                navigate.navigate(NavigationRoutes.CREATE_PIN)
+                navController.navigate(NavigationRoutes.CREATE_USER)
             },state.email!= "" && state.password!=""
             )
         SpacerH(18)
 
-        Text("Забыл пароль", style = createMatuleTypography().textRegular, textAlign =  TextAlign.Center, color = MatuleTheme.colors.accent,
+        Text("Забыл пароль?", style = createMatuleTypography().textRegular, textAlign =  TextAlign.Center, color = MatuleTheme.colors.accent,
             modifier = Modifier.clickable{
                 if (state.email!=""){
-                    navigate.navigate(NavigationRoutes.INPUT_CODE)
+                    navController.navigate(NavigationRoutes.INPUT_CODE)
                 }
                 else{
                     errorEmail = "Введите email"
