@@ -9,39 +9,42 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.netlibrary.network.NetworkMonitor
+import com.example.regprofi26_matule.DI.networkModule
+import com.example.regprofi26_matule.Domain.UserRepository
+import com.example.regprofi26_matule.Presentation.Navigation.Navigation
 import com.example.regprofi26_matule.ui.theme.RegProfi26_MatuleTheme
+import com.example.uikit.UI.MatuleTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
+
+    val isOnline = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val networkModuleMonitor = NetworkMonitor(this)
+        isOnline.value = networkModuleMonitor.isConnected()
+
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(networkModule)
+        }
+
+        UserRepository.init(this)
+
         enableEdgeToEdge()
         setContent {
-            RegProfi26_MatuleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            MatuleTheme {
+                Navigation(isOnline.value)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RegProfi26_MatuleTheme {
-        Greeting("Android")
-    }
-}
