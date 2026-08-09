@@ -81,5 +81,8 @@ class UseCase(private val Repository: Repository) {
         return Repository.getOrders(filter)
     }
 
+    fun getImageUrl(collection: String, recordId: String, fileName: String): String{
+        return Repository.getImageUrl(collection = collection, id = recordId, image = fileName )
+    }
 
 }
