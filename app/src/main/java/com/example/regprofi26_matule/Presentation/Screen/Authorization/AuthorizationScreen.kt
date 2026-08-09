@@ -86,6 +86,13 @@ fun AuthorizationScreen(viewModel: AuthViewModel, navController: NavHostControll
 
         ButtonBig("Далее",
             {
+                navController.navigate(NavigationRoutes.CREATE_PIN)
+            },state.email!= "" && state.password!=""
+            )
+        SpacerH(13)
+
+        ButtonBig("Регистрация",
+            {
                 navController.navigate(NavigationRoutes.CREATE_USER)
             },state.email!= "" && state.password!=""
             )
