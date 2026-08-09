@@ -86,16 +86,15 @@ fun AuthorizationScreen(viewModel: AuthViewModel, navController: NavHostControll
 
         ButtonBig("Далее",
             {
-                navController.navigate(NavigationRoutes.CREATE_PIN)
+                viewModel.Auth(navController, true)
             },state.email!= "" && state.password!=""
             )
         SpacerH(13)
 
         ButtonBig("Регистрация",
             {
-                navController.navigate(NavigationRoutes.CREATE_USER)
-            },state.email!= "" && state.password!=""
-            )
+                viewModel.Registration(navController)
+            },state.email!= "" && state.password!="")
         SpacerH(18)
 
         Text("Забыл пароль?", style = createMatuleTypography().textRegular, textAlign =  TextAlign.Center, color = MatuleTheme.colors.accent,

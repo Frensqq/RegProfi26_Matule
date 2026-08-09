@@ -28,6 +28,6 @@ val networkModule = module{
     factory { UseCase(get()) }
 
     viewModel{ SplashViewModel() }
-    viewModel{ AuthViewModel() }
+    viewModel{ AuthViewModel(get()) }
 
 }

@@ -103,8 +103,7 @@ fun CreateProfileScreen(navController: NavHostController, viewModel: AuthViewMod
     Box(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 33.dp),
         contentAlignment = Alignment.BottomCenter) {
         ButtonBig("Создать",
-            {
-                navController.navigate(NavigationRoutes.MAIN)
+            {viewModel.patchUser(navController)
             },stateButton
             )
     }

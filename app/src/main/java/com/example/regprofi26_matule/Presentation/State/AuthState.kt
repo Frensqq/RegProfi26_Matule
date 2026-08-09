@@ -24,4 +24,5 @@ data class AuthState (
     val gender: String = "",
 
     val pinCode: String = ""
+
 )

@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.AuthorizationScreen
+import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreatePasswordScreen
+import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreatePinScreen
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreateProfileScreen
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.InputEmailCodeScreen
 import com.example.regprofi26_matule.Presentation.Screen.Splash.SplashScreen
@@ -30,16 +32,22 @@ fun Navigation(isOnline: Boolean){
             AuthorizationScreen(authViewModel, navController)
         }
         composable(NavigationRoutes.CREATE_PIN) {
-
+            CreatePinScreen(navController, authViewModel, true)
+        }
+        composable(NavigationRoutes.INPUT_PIN) {
+            CreatePinScreen(navController, authViewModel, false)
         }
         composable(NavigationRoutes.INPUT_CODE){
             InputEmailCodeScreen(authViewModel, navController)
         }
         composable(NavigationRoutes.CREATE_PASS) {
-
+            CreatePasswordScreen(authViewModel, navController)
         }
         composable(NavigationRoutes.CREATE_USER) {
             CreateProfileScreen(navController, authViewModel)
+        }
+        composable(NavigationRoutes.MAIN){
+
         }
     }
 }
