@@ -13,6 +13,7 @@ import com.example.regprofi26_matule.Presentation.Screen.Authorization.InputEmai
 import com.example.regprofi26_matule.Presentation.Screen.Market.CartScreen
 import com.example.regprofi26_matule.Presentation.Screen.Market.CatalogScreen
 import com.example.regprofi26_matule.Presentation.Screen.Market.MainScreen
+import com.example.regprofi26_matule.Presentation.Screen.Profile.ProfileScreen
 import com.example.regprofi26_matule.Presentation.Screen.Splash.SplashScreen
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
@@ -59,6 +60,9 @@ fun Navigation(isOnline: Boolean){
         }
         composable(NavigationRoutes.CART) {
             CartScreen(mainViewModel, navController)
+        }
+        composable(NavigationRoutes.PROFILE) {
+            ProfileScreen(mainViewModel,navController)
         }
     }
 }
