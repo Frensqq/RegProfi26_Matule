@@ -46,6 +46,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
     LaunchedEffect(Unit) {
         if (launch){
             viewModel.getNews()
+            viewModel.getCart()
             viewModel.getProducts()
             launch = false
         }
@@ -138,10 +139,26 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
             modifier = Modifier.padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
+
             if (state.Products != null) {
                 items(state.Products!!.items) {
+
+                    val result = state.Cart?.items?.find {item-> item.product_id == it.id  }
+                    val isResult = result != null
+
                     PrimaryCard(
-                        it.title, it.type, it.price.toString(), true,{}
+                        it.title,
+                        it.type,
+                        it.price.toString(),
+                        !isResult ,
+                        {
+                            if (isResult) viewModel.deleteCart(result.id)
+                            else {
+                                viewModel.postCart(it.id)
+                            }
+                        },
+                        {}
                     )
                 }
                 item { SpacerH(88) }

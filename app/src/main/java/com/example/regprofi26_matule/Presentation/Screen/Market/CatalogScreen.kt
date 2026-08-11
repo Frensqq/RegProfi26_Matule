@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.CalculateCostInCart
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonCart
 import com.example.uikit.Card.PrimaryCard
@@ -29,6 +31,7 @@ import com.example.uikit.Search.Search
 import com.example.uikit.Search.SearchSmall
 import com.example.uikit.Tabbar.TabBar
 import com.example.uikit.UI.SpacerH
+import com.example.uikit.UI.createMatuleTypography
 
 @Composable
 fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
@@ -39,6 +42,7 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
     LaunchedEffect(Unit) {
         if (launch){
             viewModel.getProducts()
+            viewModel.getCart()
             launch = false
         }
     }
@@ -65,7 +69,7 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
             {viewModel.updateState(state.copy(searchString = it))},
             onClick = {viewModel.updateState(state.copy(searchString = ""))}
         ) {
-
+            navController.navigate(NavigationRoutes.CART)
         }
 
         SpacerH(32)
@@ -84,8 +88,27 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
         ) {
             if (state.Products != null) {
                 items(state.Products!!.items) {
+
+                    val result = state.Cart?.items?.find { cartItem ->
+                        cartItem.product_id == it.id
+                    }
+                    val isResult = result != null
+
                     PrimaryCard(
-                        it.title, it.type, it.price.toString(), true,{}
+                        it.title,
+                        it.type,
+                        it.price.toString(),
+                        !isResult ,
+                        {
+                            if (isResult){
+                                viewModel.deleteCart(result!!.id)
+                            }
+                            else {
+                                viewModel.postCart(it.id)
+                            }
+                        },{
+
+                        }
                     )
                 }
                 item { SpacerH(88) }
@@ -99,10 +122,12 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
         horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-        Box(Modifier.padding(horizontal = 20.dp)) {
-            ButtonCart("В корзину", 100, {
-
-            }, true)
+        if (state.Cart?.totalItems != 0 && state.Cart != null){
+            Box(Modifier.padding(horizontal = 20.dp)) {
+                ButtonCart("В корзину", CalculateCostInCart(viewModel), {
+                    navController.navigate(NavigationRoutes.CART)
+                }, true)
+            }
         }
 
         SpacerH(35)

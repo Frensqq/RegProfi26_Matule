@@ -21,4 +21,6 @@ object NavigationRoutes {
 
     const val CATALOG = "Catalog"
 
+    const val CART = "Cart"
+
 }
