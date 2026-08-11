@@ -19,4 +19,8 @@ object NavigationRoutes {
 
     const val INPUT_PIN = "InputPin"
 
+    const val CATALOG = "Catalog"
+
+    const val CART = "Cart"
+
 }

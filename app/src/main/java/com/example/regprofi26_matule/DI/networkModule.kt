@@ -8,6 +8,7 @@ import com.example.netlibrary.network.IsConnect
 import com.example.netlibrary.network.NetworkMonitor
 import com.example.regprofi26_matule.Domain.UseCase
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
+import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.SplashViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -29,5 +30,6 @@ val networkModule = module{
 
     viewModel{ SplashViewModel() }
     viewModel{ AuthViewModel(get()) }
+    viewModel{ MainViewModel(get()) }
 
 }

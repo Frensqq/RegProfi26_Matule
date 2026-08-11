@@ -10,8 +10,12 @@ import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreatePas
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreatePinScreen
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.CreateProfileScreen
 import com.example.regprofi26_matule.Presentation.Screen.Authorization.InputEmailCodeScreen
+import com.example.regprofi26_matule.Presentation.Screen.Market.CartScreen
+import com.example.regprofi26_matule.Presentation.Screen.Market.CatalogScreen
+import com.example.regprofi26_matule.Presentation.Screen.Market.MainScreen
 import com.example.regprofi26_matule.Presentation.Screen.Splash.SplashScreen
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
+import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.SplashViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -22,6 +26,7 @@ fun Navigation(isOnline: Boolean){
     val navController = rememberNavController()
     val splashViewModel: SplashViewModel = koinViewModel()
     val authViewModel: AuthViewModel = koinViewModel()
+    val mainViewModel: MainViewModel = koinViewModel()
 
     NavHost(navController = navController, startDestination = NavigationRoutes.SPLASH){
 
@@ -47,7 +52,13 @@ fun Navigation(isOnline: Boolean){
             CreateProfileScreen(navController, authViewModel)
         }
         composable(NavigationRoutes.MAIN){
-
+            MainScreen(mainViewModel, navController)
+        }
+        composable(NavigationRoutes.CATALOG) {
+            CatalogScreen(mainViewModel, navController)
+        }
+        composable(NavigationRoutes.CART) {
+            CartScreen(mainViewModel, navController)
         }
     }
 }

@@ -11,6 +11,7 @@ import com.example.netlibrary.domain.model.RequestRegister
 import com.example.netlibrary.domain.model.RequestUser
 import com.example.netlibrary.domain.model.ResponseAuth
 import com.example.netlibrary.domain.model.ResponseCart
+import com.example.netlibrary.domain.model.ResponseCarts
 import com.example.netlibrary.domain.model.ResponseOrder
 import com.example.netlibrary.domain.model.ResponseProducts
 import com.example.netlibrary.domain.model.ResponseRegister
@@ -80,6 +81,15 @@ class UseCase(private val Repository: Repository) {
     suspend fun getOrders(filter: String? = null): NetworkResult<ResponseOrder>{
         return Repository.getOrders(filter)
     }
+    suspend fun getCart(filter: String? = null): NetworkResult<ResponseCarts>{
+        return Repository.getBucket(filter)
+    }
+    suspend fun deleteCart(id: String): NetworkResult<Unit>{
+        return Repository.deleteBucket(id)
+    }
 
+    fun getImageUrl(collection: String, recordId: String, fileName: String): String{
+        return Repository.getImageUrl(collection = collection, id = recordId, image = fileName )
+    }
 
 }
