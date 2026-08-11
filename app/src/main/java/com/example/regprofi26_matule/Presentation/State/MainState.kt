@@ -1,5 +1,6 @@
 package com.example.regprofi26_matule.Presentation.State
 
+import com.example.netlibrary.domain.model.Product
 import com.example.netlibrary.domain.model.ResponseCarts
 import com.example.netlibrary.domain.model.ResponseOrder
 import com.example.netlibrary.domain.model.ResponseProducts
@@ -32,6 +33,8 @@ data class MainState(
     var ResponseOrder: ResponseOrder? = null,
     var ResponseOrders: List<ResponseOrder> = emptyList(),
     var OrderItemList: List<OrderCardItem>  = emptyList(),
-    var stateOrderCreate: Boolean = false
+    var stateOrderCreate: Boolean = false,
+
+    var Product: Product? = null,
 
     )

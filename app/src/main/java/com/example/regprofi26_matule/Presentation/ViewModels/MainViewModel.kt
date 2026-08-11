@@ -298,12 +298,74 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
                                 isNotInternet = true
                             )
                         )
+                        Log.e("postOrder NoInternet", state.error.toString())
                     }
                 }
 
             } catch (e: Exception) {
                 Log.e(
                     "postOrder ViewModel",
+                    e.message.toString()
+                )
+            }
+        }
+    }
+
+    fun getDescProduct(){
+        viewModelScope.launch {
+
+            updateState(
+                state.copy(
+                    isLoading = true,
+                    error = null
+                )
+            )
+
+            try {
+                when (
+                    val response = UseCase.getProduct(
+                        id = state.currentProductId
+                    )
+                ) {
+
+                    is NetworkResult.Success -> {
+
+                        updateState(
+                            state.copy(
+                                isLoading = false,
+                                Product = response.data
+                            )
+                        )
+
+                        Log.d(
+                            "getDescProduct",
+                            response.data.id
+                        )
+                    }
+
+                    is NetworkResult.Error -> {
+                        updateState(
+                            state.copy(
+                                isLoading = false,
+                                error = response.errorResponse.message
+                            )
+                        )
+                    }
+
+                    is NetworkResult.NoInternet -> {
+                        updateState(
+                            state.copy(
+                                isLoading = false,
+                                isNotInternet = true
+                            )
+                        )
+                        Log.e("getDescProduct NoInternet", state.error.toString())
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e(
+                    "getDescProduct ViewModel",
                     e.message.toString()
                 )
             }

@@ -27,6 +27,7 @@ import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonCart
 import com.example.uikit.Card.PrimaryCard
 import com.example.uikit.CategoryMenu.CategoryMenu
+import com.example.uikit.Modal.ModalWindow
 import com.example.uikit.Search.Search
 import com.example.uikit.Search.SearchSmall
 import com.example.uikit.Tabbar.TabBar
@@ -37,6 +38,8 @@ import com.example.uikit.UI.createMatuleTypography
 fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
 
     val state = viewModel.state
+    var openDescription by remember { mutableStateOf(false) }
+
 
     var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
@@ -107,7 +110,11 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
                                 viewModel.postCart(it.id)
                             }
                         },{
-
+                            viewModel.updateState(state.copy(
+                                currentProductId = it.id
+                            ))
+                            viewModel.getDescProduct()
+                            openDescription = true
                         }
                     )
                 }
@@ -145,6 +152,22 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
             },state.tabBarState)
         }
 
+    }
+
+    if (openDescription){
+
+        val data = state.Product!!
+
+        ModalWindow(
+            data.title?:"",
+            data.description?:"",
+            data.approximateCost?:"",
+            data.price,
+            {
+                viewModel.postCart(data.id)
+            },state.Cart!!.items.find { item -> item.product_id == data.id } == null,
+            {openDescription = false}
+        )
     }
 
 }
