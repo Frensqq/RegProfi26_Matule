@@ -36,6 +36,70 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
         return url
     }
 
+    fun getUser( ){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                when(val response = UseCase.getUser(
+                    UserRepository.UserId
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(
+                            state.copy(
+                                User = response.data,
+                                isLoading = false
+                            )
+                        )
+                        Log.d("getUser", response.data.id)
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("getUser Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("getUser NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("getUser ViewModel", e.message.toString())
+            }
+        }
+    }
+
+    fun getOrder( ){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                when(val response = UseCase.getOrders(
+                    "user_id = '${UserRepository.UserId}'"
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(
+                            state.copy(
+                                Orders = response.data,
+                                isLoading = false
+                            )
+                        )
+                        Log.d("getOrder", response.data.totalItems.toString())
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("getOrder Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("getOrder NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("getOrder ViewModel", e.message.toString())
+            }
+        }
+    }
+
     fun getNews( ){
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))

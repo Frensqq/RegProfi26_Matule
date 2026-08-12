@@ -149,6 +149,7 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
                 viewModel.updateState(state.copy(tabBarState = "Заказы"))
             },{
                 viewModel.updateState(state.copy(tabBarState = "Профиль"))
+                navController.navigate(NavigationRoutes.PROFILE)
             },state.tabBarState)
         }
 

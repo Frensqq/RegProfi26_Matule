@@ -23,4 +23,8 @@ object NavigationRoutes {
 
     const val CART = "Cart"
 
+    const val PROFILE = "Profile"
+
+    const val ORDER_LIST = "OrderList"
+
 }

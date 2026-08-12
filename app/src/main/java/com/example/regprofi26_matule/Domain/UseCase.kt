@@ -78,7 +78,7 @@ class UseCase(private val Repository: Repository) {
         return Repository.postOrder(data)
     }
 
-    suspend fun getOrders(filter: String? = null): NetworkResult<ResponseOrder>{
+    suspend fun getOrders(filter: String? = null): NetworkResult<ResponseCarts>{
         return Repository.getOrders(filter)
     }
     suspend fun getCart(filter: String? = null): NetworkResult<ResponseCarts>{

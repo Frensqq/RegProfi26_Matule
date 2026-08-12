@@ -5,6 +5,7 @@ import com.example.netlibrary.domain.model.ResponseCarts
 import com.example.netlibrary.domain.model.ResponseOrder
 import com.example.netlibrary.domain.model.ResponseProducts
 import com.example.netlibrary.domain.model.ResponsesNews
+import com.example.netlibrary.domain.model.User
 import com.example.uikit.Card.OrderCardItem
 
 data class MainState(
@@ -36,5 +37,7 @@ data class MainState(
     var stateOrderCreate: Boolean = false,
 
     var Product: Product? = null,
+    val User: User? = null,
+    val Orders: ResponseCarts ? = null,
 
     )

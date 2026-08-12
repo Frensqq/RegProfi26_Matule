@@ -14,6 +14,9 @@ object UserRepository {
     var Act: Boolean
         get() = actSystem.getBoolean("Act", false)
         set(value) = actSystem.edit().putBoolean("Act", value).apply()
+    var Notification: Boolean
+        get() = actSystem.getBoolean("Act", false)
+        set(value) = actSystem.edit().putBoolean("Act", value).apply()
 
     var UserId: String
         get() = actSystem.getString("UserId", "")!!

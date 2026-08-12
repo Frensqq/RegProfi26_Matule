@@ -22,6 +22,8 @@ data class AuthState (
     val tg: String = "",
     val dateUser: String = "",
     val gender: String = "",
+    val phone: String = "",
+
 
     val pinCode: String = ""
 
