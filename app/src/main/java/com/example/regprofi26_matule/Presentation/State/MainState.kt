@@ -1,12 +1,15 @@
 package com.example.regprofi26_matule.Presentation.State
 
 import com.example.netlibrary.domain.model.Product
+import com.example.netlibrary.domain.model.Project
 import com.example.netlibrary.domain.model.ResponseCarts
 import com.example.netlibrary.domain.model.ResponseOrder
 import com.example.netlibrary.domain.model.ResponseProducts
 import com.example.netlibrary.domain.model.ResponsesNews
+import com.example.netlibrary.domain.model.ResponsesProject
 import com.example.netlibrary.domain.model.User
 import com.example.uikit.Card.OrderCardItem
+import java.io.File
 
 data class MainState(
     var isLoading:Boolean = false,
@@ -40,4 +43,17 @@ data class MainState(
     val User: User? = null,
     val Orders: ResponseCarts ? = null,
 
+    var Projects: ResponsesProject? = null,
+    var Project: Project? = null,
+
+    var titleProject: String = "",
+    var genderProject: String = "",
+    var description_source: String = "",
+    var categoryListProject: List<String> = listOf("XS","S","M","L","XL","XXL"),
+    var categoryProject: String = "",
+    var image: File? = null,
+    var typeProject: String = "",
+    var typeListProject: List<String> = listOf("Рубаха","Футболка","Штаны","Шорты","Кофта","Аксессуар"),
+    var dateStart: String = "",
+    var dateEnd: String = ""
     )

@@ -11,9 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +42,14 @@ fun ProjectList(
     viewModel: MainViewModel){
 
     val state = viewModel.state
+
+    var launch by remember { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        if (launch){
+            viewModel.getProject()
+            launch = false
+        }
+    }
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
 
@@ -62,7 +76,7 @@ fun ProjectList(
                 contentDescription = null,
                 modifier = Modifier.padding(6.dp)
                     .clickable{
-
+                        navController.navigate(NavigationRoutes.CREATE_PROJECT)
                     },
                 tint = MatuleTheme.colors.inputIcon
             )
@@ -74,8 +88,19 @@ fun ProjectList(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            items(1){
-                PrimaryCard("test", "", "100", true, {}, {},true)
+            if (state.Projects != null) {
+                items(state.Projects!!.items) {
+                    PrimaryCard(it.title,
+                        "",
+                        it.typeProject,
+                        true,
+                        {},
+                        {
+
+                    },
+                        true
+                    )
+                }
             }
 
             item {
