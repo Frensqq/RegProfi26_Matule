@@ -167,7 +167,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
                             ))
                             viewModel.getDescProduct()
                             openDescription = true
-                        }
+                        }, false
                     )
                 }
                 item { SpacerH(88) }
@@ -187,6 +187,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
                 navController.navigate(NavigationRoutes.CATALOG)
             },{
                 viewModel.updateState(state.copy(tabBarState = "Заказы"))
+                navController.navigate(NavigationRoutes.PROJECT)
             },{
                 viewModel.updateState(state.copy(tabBarState = "Профиль"))
                 navController.navigate(NavigationRoutes.PROFILE)

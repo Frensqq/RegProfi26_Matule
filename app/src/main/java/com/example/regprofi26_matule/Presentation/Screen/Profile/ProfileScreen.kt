@@ -164,6 +164,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                 navController.navigate(NavigationRoutes.CATALOG)
             },{
                 viewModel.updateState(state.copy(tabBarState = "Заказы"))
+                navController.navigate(NavigationRoutes.PROJECT)
             },{
                 viewModel.updateState(state.copy(tabBarState = "Профиль"))
             },state.tabBarState)
