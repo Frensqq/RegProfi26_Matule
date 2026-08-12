@@ -1,7 +1,11 @@
 package com.example.regprofi26_matule.Presentation.ViewModels
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -11,6 +15,7 @@ import com.example.netlibrary.domain.model.NetworkResult
 import com.example.netlibrary.domain.model.RequestAuth
 import com.example.netlibrary.domain.model.RequestCart
 import com.example.netlibrary.domain.model.RequestOrder
+import com.example.netlibrary.domain.model.RequestProject
 import com.example.netlibrary.domain.model.RequestRegister
 import com.example.netlibrary.domain.model.RequestUser
 import com.example.netlibrary.domain.model.User
@@ -20,6 +25,9 @@ import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.State.AuthState
 import com.example.regprofi26_matule.Presentation.State.MainState
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.io.copyTo
 
 class MainViewModel(private val UseCase: UseCase): ViewModel() {
 
@@ -30,11 +38,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
         _state.value = newState
     }
 
-    fun getImageUrl(collectionId: String, recordId: String, fileName: String): String{
-        val url = UseCase.getImageUrl(collectionId,recordId,fileName)
-        Log.d("getNewsImage ViewModel", url)
-        return url
-    }
+
 
     fun getUser( ){
         viewModelScope.launch {
@@ -67,6 +71,79 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
             }
         }
     }
+    fun getProject( ){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                when(val response = UseCase.getProject(
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(
+                            state.copy(
+                                Projects = response.data,
+                                isLoading = false
+                            )
+                        )
+                        Log.d("getProject", response.data.totalItems.toString())
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("getProject Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("getProject NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("getProject ViewModel", e.message.toString())
+            }
+        }
+    }
+    fun postProject( navController: NavHostController){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                when(val response = UseCase.postProject(
+                    UserRepository.Token,
+                    RequestProject(
+                        state.titleProject,
+                        typeProject = state.typeProject,
+                        UserRepository.UserId,
+                        dateStart = state.dateStart,
+                        dateEnd = state.dateEnd,
+                        gender = state.genderProject,
+                        description_source = state.description_source,
+                        category = state.categoryProject,
+                        selectedImageFile
+                    )
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(
+                            state.copy(
+                                Project = response.data,
+                                isLoading = false
+                            )
+                        )
+                        navController.navigate(NavigationRoutes.PROJECT)
+                        Log.d("postProject", response.data.id)
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("postProject Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("postProject NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("postProject ViewModel", e.message.toString())
+            }
+        }
+    }
 
     fun getOrder( ){
         viewModelScope.launch {
@@ -82,6 +159,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
                                 isLoading = false
                             )
                         )
+
                         Log.d("getOrder", response.data.totalItems.toString())
                     }
                     is NetworkResult.Error ->{
@@ -436,6 +514,63 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
         }
     }
 
+    var selectedImageUri by mutableStateOf<Uri?>(null)
+    var selectedImageFile by mutableStateOf<File?>(null)
+    var selectedImageName by mutableStateOf("")
+
+    fun selectImage(uri: Uri, context: Context) {
+        selectedImageUri = uri
+        selectedImageName = getFileNameFromUri(context, uri)
+        selectedImageFile = uriToFile(context, uri)
+    }
+
+    fun clearSelectedImage() {
+        selectedImageUri = null
+        selectedImageFile = null
+        selectedImageName = ""
+    }
+
+    private fun getFileNameFromUri(context: Context, uri: Uri): String {
+        return context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst()
+            cursor.getString(nameIndex) ?: "image_${System.currentTimeMillis()}.jpg"
+        } ?: "image_${System.currentTimeMillis()}.jpg"
+    }
+
+    private fun uriToFile(context: Context, uri: Uri): File? {
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                Log.e("MainViewModel", "Failed to open input stream for URI: $uri")
+                return null
+            }
+
+            val fileName = "avatar_${System.currentTimeMillis()}.jpg"
+            val tempFile = File(context.cacheDir, fileName)
+
+            FileOutputStream(tempFile).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+            inputStream.close()
+
+            Log.d("MainViewModel", "File created: ${tempFile.absolutePath}")
+            Log.d("MainViewModel", "File size: ${tempFile.length()} bytes")
+
+            tempFile
+        } catch (e: Exception) {
+            Log.e("MainViewModel", "Error converting URI to file: ${e.message}", e)
+            null
+        }
+    }
+
+
+
+    fun getImageUrl(collectionId: String, recordId: String, fileName: String): String{
+        val url = UseCase.getImageUrl(collectionId,recordId,fileName)
+        Log.d("getNewsImage ViewModel", url)
+        return url
+    }
 
 
 

@@ -15,6 +15,9 @@ import com.example.regprofi26_matule.Presentation.Screen.Market.CatalogScreen
 import com.example.regprofi26_matule.Presentation.Screen.Market.MainScreen
 import com.example.regprofi26_matule.Presentation.Screen.Profile.ListOrder
 import com.example.regprofi26_matule.Presentation.Screen.Profile.ProfileScreen
+import com.example.regprofi26_matule.Presentation.Screen.Project.CreateProjectScreen
+import com.example.regprofi26_matule.Presentation.Screen.Project.OpenProject
+import com.example.regprofi26_matule.Presentation.Screen.Project.ProjectList
 import com.example.regprofi26_matule.Presentation.Screen.Splash.SplashScreen
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
@@ -67,6 +70,15 @@ fun Navigation(isOnline: Boolean){
         }
         composable(NavigationRoutes.ORDER_LIST) {
             ListOrder(navController,mainViewModel)
+        }
+        composable(NavigationRoutes.PROJECT) {
+            ProjectList(navController,mainViewModel)
+        }
+        composable(NavigationRoutes.CREATE_PROJECT){
+            CreateProjectScreen(mainViewModel,navController)
+        }
+        composable(NavigationRoutes.OPEN_PROJECT){
+            OpenProject(mainViewModel,navController)
         }
     }
 }

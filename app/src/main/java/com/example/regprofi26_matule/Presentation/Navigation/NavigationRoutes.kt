@@ -27,4 +27,9 @@ object NavigationRoutes {
 
     const val ORDER_LIST = "OrderList"
 
+    const val PROJECT = "Project"
+
+    const val CREATE_PROJECT = "CreateProject"
+    const val OPEN_PROJECT = "OpenProject"
+
 }
