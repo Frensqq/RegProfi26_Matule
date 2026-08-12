@@ -94,9 +94,14 @@ fun ProjectList(
                         "",
                         it.typeProject,
                         true,
-                        {},
+                        {viewModel.updateState(
+                            state.copy(
+                                currentProject = it
+                            )
+                        )
+                            navController.navigate(NavigationRoutes.OPEN_PROJECT)
+                        },
                         {
-
                     },
                         true
                     )

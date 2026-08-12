@@ -55,5 +55,7 @@ data class MainState(
     var typeProject: String = "",
     var typeListProject: List<String> = listOf("Рубаха","Футболка","Штаны","Шорты","Кофта","Аксессуар"),
     var dateStart: String = "",
-    var dateEnd: String = ""
+    var dateEnd: String = "",
+
+    var currentProject: Project? = null
     )

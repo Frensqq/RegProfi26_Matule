@@ -30,5 +30,6 @@ object NavigationRoutes {
     const val PROJECT = "Project"
 
     const val CREATE_PROJECT = "CreateProject"
+    const val OPEN_PROJECT = "OpenProject"
 
 }

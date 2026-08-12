@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,54 +13,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.SemanticsProperties.InputText
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonBig
 import com.example.uikit.Inputs.Inputs
 import com.example.uikit.Inputs.InputsImage
-import com.example.uikit.R
 import com.example.uikit.Selects.Select
 import com.example.uikit.Selects.SelectDate
 import com.example.uikit.Tabbar.TabBar
 import com.example.uikit.UI.MatuleTheme
 import com.example.uikit.UI.SpacerH
-import com.example.uikit.UI.SpacerW
 import com.example.uikit.UI.createMatuleTypography
 
 @Composable
-fun CreateProjectScreen(viewModel: MainViewModel, navController: NavHostController){
+fun OpenProject(viewModel: MainViewModel, navController: NavHostController){
 
-    val state = viewModel.state
-
-    val context = LocalContext.current
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            viewModel.selectImage(it, context)  // ← Сохраняем изображение в ViewModel
-        }
-    }
-
-    // Получаем выбранное изображение из ViewModel
-    val selectedImageUri = viewModel.selectedImageUri
-    val painter = if (selectedImageUri != null) {
-        rememberAsyncImagePainter(model = selectedImageUri)
-    } else {
-        null
-    }
+    val state = viewModel.state.currentProject
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
 
@@ -90,70 +67,58 @@ fun CreateProjectScreen(viewModel: MainViewModel, navController: NavHostControll
         ) {
             item {
                 Select(
-                    state.typeProject,
+                    state!!.typeProject,
                     "Выберите тип",
-                    state.typeListProject,
+                    listOf(),
                     {
-                        viewModel.updateState(state.copy(
-                            typeProject = it
-                        ))
+
                     }, preview = "Тип одежды"
                 )
             }
             item {
                 Inputs(
-                    state.titleProject,
+                    state!!.title,
                     "Введите название",
                     {
-                        viewModel.updateState(state.copy(
-                            titleProject = it
-                        ))
+
                     },
                     title = "Название одежды",
                 )
             }
             item {
                 SelectDate(
-                    state.dateStart,
+                    state!!.dateStart,
                     "--.--.----",
                     {
-                        viewModel.updateState(
-                            state.copy(dateStart = it)
-                        )
+
                     }, preview = "Дата начала пошива"
                 )
             }
             item {
                 SelectDate(
-                    state.dateEnd,
+                    state!!.dateEnd,
                     "--.--.----",
                     {
-                        viewModel.updateState(
-                            state.copy(dateEnd = it)
-                        )
+
                     }, preview = "Дата Окончания пошива"
                 )
             }
             item {
                 Select(
-                    state.categoryProject,
+                    state!!.category,
                     "Введите размер",
-                    state.categoryListProject,
+                    listOf(),
                     {
-                        viewModel.updateState(state.copy(
-                            categoryProject = it
-                        ))
+
                     }, preview = "Размер"
                 )
             }
             item {
                 Inputs(
-                    state.description_source,
+                    state!!.description_source,
                     "example.com",
                     {
-                        viewModel.updateState(state.copy(
-                            description_source = it
-                        ))
+
                     },
                     title = "Источник описания",
                 )
@@ -161,18 +126,17 @@ fun CreateProjectScreen(viewModel: MainViewModel, navController: NavHostControll
             item {
                 InputsImage(
                     onClick = {
-                        galleryLauncher.launch("image/*")
                     },
-                    painter = painter,
-                    state = selectedImageUri != null
+                    painter = rememberAsyncImagePainter(viewModel.getImageUrl(state!!.collectionId,state!!.id, state!!.image)),
+                    state =  true
                 )
             }
             item {
                 Column{
                     ButtonBig(
-                        "Подтвердить",
+                        "Назад",
                         {
-                            viewModel.postProject(navController)
+                            navController.navigate(NavigationRoutes.PROJECT)
                         }, true
                     )
 
@@ -183,22 +147,24 @@ fun CreateProjectScreen(viewModel: MainViewModel, navController: NavHostControll
         }
     }
 
+    val stateNav = viewModel.state
+
     Box(Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
             TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
+                viewModel.updateState(stateNav.copy(tabBarState = "Главная"))
                 navController.navigate(NavigationRoutes.MAIN)
             },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
+                viewModel.updateState(stateNav.copy(tabBarState = "Каталог"))
                 navController.navigate(NavigationRoutes.CATALOG)
             },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
+                viewModel.updateState(stateNav.copy(tabBarState = "Заказы"))
             },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
+                viewModel.updateState(stateNav.copy(tabBarState = "Профиль"))
                 navController.navigate(NavigationRoutes.PROFILE)
-            },state.tabBarState)
+            },stateNav.tabBarState)
         }
 
     }
