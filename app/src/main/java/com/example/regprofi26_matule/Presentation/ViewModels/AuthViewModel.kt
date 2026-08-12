@@ -115,7 +115,8 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
                         secondname = state.surname,
                         datebirthday = state.dateUser,
                         lastname = state.patronymic,
-                        gender = state.gender
+                        gender = state.gender,
+                        phone = state.phone
                     )
                 )){
                     is NetworkResult.Success -> {

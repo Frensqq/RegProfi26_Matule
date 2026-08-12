@@ -89,16 +89,16 @@ fun CreateProfileScreen(navController: NavHostController, viewModel: AuthViewMod
                 )
             }
             item {
-                Inputs(state.tg, "Telegram",
+                Inputs(state.phone, "Phone",
                     {
-                        viewModel.updateState(state.copy(tg = it))
+                        viewModel.updateState(state.copy(phone = it))
                     })
             }
         }
     }
 
     var stateButton by remember { mutableStateOf(false) }
-    stateButton = state.name != "" && state.surname != "" && state.patronymic != "" && state.gender != ""  && state.dateUser != "" && state.tg != ""
+    stateButton = state.name != "" && state.surname != "" && state.patronymic != "" && state.gender != ""  && state.dateUser != "" && state.phone != ""
 
     Box(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 33.dp),
         contentAlignment = Alignment.BottomCenter) {

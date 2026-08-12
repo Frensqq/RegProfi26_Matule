@@ -25,4 +25,6 @@ object NavigationRoutes {
 
     const val PROFILE = "Profile"
 
+    const val ORDER_LIST = "OrderList"
+
 }
