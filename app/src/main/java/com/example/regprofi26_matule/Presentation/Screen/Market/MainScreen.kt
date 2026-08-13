@@ -52,7 +52,7 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
             viewModel.getProducts()
     }
     LaunchedEffect(state.searchString) {
-        viewModel.updateState(state.copy(searchFilter = "title ~ '${state.searchString}'"))
+        viewModel.updateState(state.copy(searchFilter = "title ~ '${state.searchString}' || description ~ '${state.searchString}'"))
         viewModel.getProducts()
     }
     LaunchedEffect(state.currentCategory) {
