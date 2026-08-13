@@ -47,14 +47,12 @@ fun CartScreen(viewModel: MainViewModel, navController: NavHostController){
 
     var StateOrderCreate by remember { mutableStateOf(false) }
     val state = viewModel.state
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
+
             viewModel.updateState(state.copy(searchFilter = null))
             viewModel.getCart()
             viewModel.getProducts()
-            launch = false
-        }
+
     }
 
 

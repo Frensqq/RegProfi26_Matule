@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.regprofi26_matule.Domain.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.R
 import com.example.uikit.Controls.Toggle
@@ -43,12 +44,8 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
 
     val state = viewModel.state
 
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getUser()
-            launch = false
-        }
     }
 
     var notification by remember { mutableStateOf(UserRepository.Notification) }
@@ -88,9 +85,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.height(64.dp).clickable{
-                    navController.navigate(NavigationRoutes.ORDER_LIST)
-                },
+                modifier = Modifier.height(64.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -156,18 +151,10 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-                navController.navigate(NavigationRoutes.PROJECT)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-            },state.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.PROFILE
+            )
         }
 
     }

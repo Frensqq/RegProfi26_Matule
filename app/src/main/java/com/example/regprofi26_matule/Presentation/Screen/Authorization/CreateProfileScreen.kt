@@ -97,8 +97,13 @@ fun CreateProfileScreen(navController: NavHostController, viewModel: AuthViewMod
         }
     }
 
-    var stateButton by remember { mutableStateOf(false) }
-    stateButton = state.name != "" && state.surname != "" && state.patronymic != "" && state.gender != ""  && state.dateUser != "" && state.phone != ""
+    val stateButton =
+        state.name.isNotEmpty() &&
+                state.surname.isNotEmpty() &&
+                state.patronymic.isNotEmpty() &&
+                state.gender.isNotEmpty() &&
+                state.dateUser.isNotEmpty() &&
+                state.phone.isNotEmpty()
 
     Box(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 33.dp),
         contentAlignment = Alignment.BottomCenter) {

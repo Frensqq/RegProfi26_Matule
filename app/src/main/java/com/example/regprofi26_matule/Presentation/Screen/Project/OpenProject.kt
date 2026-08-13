@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonBig
 import com.example.uikit.Inputs.Inputs
@@ -153,18 +154,10 @@ fun OpenProject(viewModel: MainViewModel, navController: NavHostController){
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(stateNav.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(stateNav.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(stateNav.copy(tabBarState = "Заказы"))
-            },{
-                viewModel.updateState(stateNav.copy(tabBarState = "Профиль"))
-                navController.navigate(NavigationRoutes.PROFILE)
-            },stateNav.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.PROJECT
+            )
         }
 
     }

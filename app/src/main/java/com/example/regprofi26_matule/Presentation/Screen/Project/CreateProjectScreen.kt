@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonBig
 import com.example.uikit.Inputs.Inputs
@@ -187,18 +188,10 @@ fun CreateProjectScreen(viewModel: MainViewModel, navController: NavHostControll
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-                navController.navigate(NavigationRoutes.PROFILE)
-            },state.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.PROJECT
+            )
         }
 
     }

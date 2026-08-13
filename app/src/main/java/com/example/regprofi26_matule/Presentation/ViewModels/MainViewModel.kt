@@ -44,6 +44,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
+                PBApiServis.token = UserRepository.Token
                 when(val response = UseCase.getUser(
                     UserRepository.UserId
                 )){

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Card.PrimaryCard
 import com.example.uikit.CategoryMenu.CategoryMenu
@@ -45,14 +46,10 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
 
     var openDescription by remember { mutableStateOf(false) }
 
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getNews()
             viewModel.getCart()
             viewModel.getProducts()
-            launch = false
-        }
     }
     LaunchedEffect(state.searchString) {
         viewModel.updateState(state.copy(searchFilter = "title ~ '${state.searchString}'"))
@@ -180,18 +177,10 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController){
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-                navController.navigate(NavigationRoutes.PROJECT)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-                navController.navigate(NavigationRoutes.PROFILE)
-            },state.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.MAIN
+            )
         }
 
     }

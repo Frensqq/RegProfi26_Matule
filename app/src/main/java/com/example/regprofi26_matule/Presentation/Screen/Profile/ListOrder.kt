@@ -33,12 +33,8 @@ fun ListOrder(navController: NavHostController, viewModel: MainViewModel){
 
 
     val state = viewModel.state
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getOrder()
-            launch = false
-        }
     }
     Column(Modifier.padding(horizontal = 20.dp)){
     SpacerH(72)

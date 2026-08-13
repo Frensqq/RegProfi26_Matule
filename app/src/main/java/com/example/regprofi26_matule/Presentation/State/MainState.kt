@@ -27,7 +27,6 @@ data class MainState(
     var Products: ResponseProducts? = null,
     var totalProducts: ResponseProducts? = null,
 
-    val tabBarState: String = "Главная",
 
     var Cart: ResponseCarts? = null,
     var currentProductId: String = "",
