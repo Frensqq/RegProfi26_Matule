@@ -80,6 +80,7 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
                     is NetworkResult.Success -> {
                         UserRepository.Act = true
                         UserRepository.Token = response.data.token
+                        UserRepository.UserId = response.data.record.id
                         PBApiServis.token = UserRepository.Token
                         if(isAuth){
                             navController.navigate(NavigationRoutes.CREATE_PIN)
