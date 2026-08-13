@@ -100,7 +100,7 @@ fun AuthorizationScreen(viewModel: AuthViewModel, navController: NavHostControll
         Text("Забыл пароль?", style = createMatuleTypography().textRegular, textAlign =  TextAlign.Center, color = MatuleTheme.colors.accent,
             modifier = Modifier.clickable{
                 if (state.email!=""){
-                    navController.navigate(NavigationRoutes.INPUT_CODE)
+                    viewModel.otpRequest(navController)
                 }
                 else{
                     errorEmail = "Введите email"

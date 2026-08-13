@@ -82,7 +82,7 @@ fun CreatePasswordScreen(
 
         ButtonBig("Подтвердить",
             {
-                navController.navigate(NavigationRoutes.MAIN)
+                viewModel.resetPass(navController)
             },state.password!= "" && state.passwordConfirm!=""
         )
     }
