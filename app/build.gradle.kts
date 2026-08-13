@@ -63,7 +63,7 @@ dependencies {
     implementation(files("src/libs/UiKit.aar"))
     implementation(files("src/libs/netLibrary.aar"))
 
-
+    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
@@ -76,8 +76,8 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
 
-    // Для логирования (опционально)
     implementation("io.ktor:ktor-client-logging:2.3.7")
+
 
 
     implementation("androidx.navigation:navigation-compose:2.8.7")
