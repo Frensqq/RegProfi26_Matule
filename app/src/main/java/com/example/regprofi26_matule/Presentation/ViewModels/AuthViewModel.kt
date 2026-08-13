@@ -11,6 +11,10 @@ import com.example.netlibrary.domain.model.RequestAuth
 import com.example.netlibrary.domain.model.RequestRegister
 import com.example.netlibrary.domain.model.RequestUser
 import com.example.netlibrary.domain.model.User
+import com.example.netlibrary.domain.model.changePassword.OTPAuthRequest
+import com.example.netlibrary.domain.model.changePassword.PasswordResetRequest
+import com.example.netlibrary.domain.model.changePassword.RequestChangePass
+import com.example.netlibrary.domain.model.changePassword.RequestOtp
 import com.example.regprofi26_matule.Domain.UseCase
 import com.example.regprofi26_matule.Domain.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
@@ -139,4 +143,106 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
             }
         }
     }
+    fun otpRequest(navController: NavHostController){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                PBApiServis.token = UserRepository.Token
+                when(val response = UseCase.otpRequest(
+                    RequestOtp(
+                        state.email
+                    )
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(state.copy(
+                            responseOtp = response.data
+                        ))
+                        navController.navigate(NavigationRoutes.INPUT_CODE)
+                        Log.d("otpRequest ", "Success Patch User")
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("otpRequest Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("otpRequest NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("otpRequest ViewModel", e.message.toString())
+            }
+        }
+    }
+
+    fun otpAuth(otp: String, navHostController: NavHostController){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                PBApiServis.token = UserRepository.Token
+                when(val response = UseCase.otpAuth(
+                    OTPAuthRequest(
+                        state.responseOtp!!.otpId,
+                        otp,
+                    )
+                )){
+                    is NetworkResult.Success -> {
+                        updateState(state.copy(
+                            responseAuthOtp = response.data
+                        ))
+                        UserRepository.Token = response.data.token
+                        UserRepository.UserId = response.data.record.id
+                        navHostController.navigate(NavigationRoutes.CREATE_PASS)
+                        Log.d("otpRequest ", "Success Patch User")
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("otpRequest Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("otpRequest NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("otpRequest ViewModel", e.message.toString())
+            }
+        }
+    }
+
+    fun resetPass(navHostController: NavHostController){
+        viewModelScope.launch {
+            updateState(state.copy(isLoading = true, error = null))
+            try {
+                PBApiServis.token = UserRepository.Token
+                when(val response = UseCase.changePass(
+                    UserRepository.UserId,
+                    RequestChangePass(
+                        password = state.password,
+                        passwordConfirm = state.passwordConfirm
+                    )
+                )){
+                    is NetworkResult.Success -> {
+                        navHostController.navigate(NavigationRoutes.AUTH)
+                        Log.d("otpRequest ", "Success Patch User")
+                    }
+                    is NetworkResult.Error ->{
+                        updateState(state.copy(isLoading = false, error = response.errorResponse.message))
+                        Log.e("otpRequest Error", response.errorResponse.message)
+                    }
+                    is NetworkResult.NoInternet -> {
+                        updateState(state.copy(isNotInternet = true))
+                        Log.e("otpRequest NoInternet", state.error.toString())
+                    }
+
+                }
+            }catch (e: Exception){
+                Log.e("otpRequest ViewModel", e.message.toString())
+            }
+        }
+    }
+
+
 }

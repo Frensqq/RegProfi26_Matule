@@ -1,6 +1,8 @@
 package com.example.regprofi26_matule.Presentation.State
 
 import com.example.netlibrary.domain.model.User
+import com.example.netlibrary.domain.model.changePassword.OTPAuthResponse
+import com.example.netlibrary.domain.model.changePassword.ResponseOtp
 
 data class AuthState (
     var isLoading:Boolean = false,
@@ -25,6 +27,9 @@ data class AuthState (
     val phone: String = "",
 
 
-    val pinCode: String = ""
+    var pinCode: String = "",
+
+    var responseOtp: ResponseOtp? = null,
+    var responseAuthOtp: OTPAuthResponse? = null
 
 )

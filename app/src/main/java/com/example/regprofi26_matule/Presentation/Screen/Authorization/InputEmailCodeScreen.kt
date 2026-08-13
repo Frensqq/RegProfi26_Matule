@@ -43,6 +43,12 @@ fun InputEmailCodeScreen(viewModel: AuthViewModel, navController: NavHostControl
         }
     }
 
+    LaunchedEffect(state.pinCode) {
+        if (state.pinCode.length == 6){
+            viewModel.otpAuth(state.pinCode,navController)
+        }
+    }
+
     Column(Modifier.padding(horizontal = 20.dp, vertical = 68.dp).fillMaxWidth(), ) {
         ButtonExit {
             navController.navigate(NavigationRoutes.AUTH)
@@ -85,6 +91,7 @@ fun InputEmailCodeScreen(viewModel: AuthViewModel, navController: NavHostControl
                 modifier = Modifier.fillMaxWidth(0.7f)
                     .clickable{
                         if (timer==0){
+                            viewModel.otpRequest(navController)
                             timer=60
                         }
                     }, textAlign = TextAlign.Center

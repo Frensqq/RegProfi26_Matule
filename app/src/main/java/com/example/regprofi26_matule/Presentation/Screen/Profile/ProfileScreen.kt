@@ -1,5 +1,6 @@
 package com.example.regprofi26_matule.Presentation.Screen.Profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,33 +30,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.regprofi26_matule.Domain.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.R
+import com.example.uikit.Buttons.ButtonBig
 import com.example.uikit.Controls.Toggle
 import com.example.uikit.Tabbar.TabBar
 import com.example.uikit.UI.MatuleTheme
 import com.example.uikit.UI.SpacerH
 import com.example.uikit.UI.SpacerW
 import com.example.uikit.UI.createMatuleTypography
+import com.github.barteksc.pdfviewer.PDFView
 
 @Composable
 fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
 
     val state = viewModel.state
 
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getUser()
-            launch = false
-        }
     }
 
     var notification by remember { mutableStateOf(UserRepository.Notification) }
-
+    var document by remember {
+        mutableStateOf<String?>(null)
+    }
     Column(
         modifier = Modifier.padding(horizontal = 20.dp)
     ) {
@@ -88,9 +94,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.height(64.dp).clickable{
-                    navController.navigate(NavigationRoutes.ORDER_LIST)
-                },
+                modifier = Modifier.height(64.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -117,7 +121,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                     style = createMatuleTypography().textMedium,
                     color = MatuleTheme.colors.placeholder,
                     modifier = Modifier.clickable{
-
+                        document = "privacy.pdf"
                     }
                 )
                 SpacerH(24)
@@ -125,7 +129,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                     style = createMatuleTypography().textMedium,
                     color = MatuleTheme.colors.placeholder,
                     modifier = Modifier.clickable{
-
+                        document = "agreement.pdf"
                     }
                 )
                 SpacerH(24)
@@ -148,6 +152,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                         }
                     }
                 )
+                SpacerH(160)
             }
         }
     }
@@ -156,19 +161,28 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-                navController.navigate(NavigationRoutes.PROJECT)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-            },state.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.PROFILE
+            )
         }
+
+    }
+
+    if (document != null) {
+        AndroidView(
+            modifier = Modifier
+                .fillMaxSize(),
+            factory = { context ->
+                PDFView(context, null).apply {
+                    fromAsset(document!!)
+                        .enableSwipe(true)
+                        .swipeHorizontal(false)
+                        .enableDoubletap(true)
+                        .load()
+                }
+            }
+        )
 
     }
 }

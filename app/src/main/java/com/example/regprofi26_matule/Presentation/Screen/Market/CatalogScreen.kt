@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.Screen.Component.CalculateCostInCart
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Buttons.ButtonCart
 import com.example.uikit.Card.PrimaryCard
@@ -41,16 +42,12 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
     var openDescription by remember { mutableStateOf(false) }
 
 
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getProducts()
             viewModel.getCart()
-            launch = false
-        }
     }
     LaunchedEffect(state.searchString) {
-        viewModel.updateState(state.copy(searchFilter = "title ~ '${state.searchString}'"))
+        viewModel.updateState(state.copy(searchFilter = "title ~ '${state.searchString}' || description ~ '${state.searchString}'"))
         viewModel.getProducts()
     }
     LaunchedEffect(state.currentCategory) {
@@ -140,36 +137,29 @@ fun CatalogScreen(viewModel: MainViewModel, navController: NavHostController){
         SpacerH(35)
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-                navController.navigate(NavigationRoutes.PROJECT)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-                navController.navigate(NavigationRoutes.PROFILE)
-            },state.tabBarState)
+            MainTabBar(
+                navController,
+                NavigationRoutes.CATALOG
+            )
         }
 
     }
 
     if (openDescription){
 
-        val data = state.Product!!
+        state.Product?.let { data ->
 
-        ModalWindow(
-            data.title?:"",
-            data.description?:"",
-            data.approximateCost?:"",
-            data.price,
-            {
-                viewModel.postCart(data.id)
-            },state.Cart!!.items.find { item -> item.product_id == data.id } == null,
-            {openDescription = false}
-        )
+            ModalWindow(
+                data.title ?: "",
+                data.description ?: "",
+                data.approximateCost ?: "",
+                data.price ?: 0,
+                {
+                    viewModel.postCart(data.id)
+                }, state.Cart!!.items.find { item -> item.product_id == data.id } == null,
+                { openDescription = false }
+            )
+        }
     }
 
 }

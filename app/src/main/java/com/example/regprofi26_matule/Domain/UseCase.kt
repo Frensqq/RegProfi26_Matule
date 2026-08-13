@@ -19,6 +19,12 @@ import com.example.netlibrary.domain.model.ResponsesNews
 import com.example.netlibrary.domain.model.ResponsesProject
 import com.example.netlibrary.domain.model.User
 import com.example.netlibrary.domain.model.UsersAuth
+import com.example.netlibrary.domain.model.changePassword.OTPAuthRequest
+import com.example.netlibrary.domain.model.changePassword.OTPAuthResponse
+import com.example.netlibrary.domain.model.changePassword.PasswordResetRequest
+import com.example.netlibrary.domain.model.changePassword.RequestChangePass
+import com.example.netlibrary.domain.model.changePassword.RequestOtp
+import com.example.netlibrary.domain.model.changePassword.ResponseOtp
 import com.example.netlibrary.domain.repository.Repository
 
 class UseCase(private val Repository: Repository) {
@@ -90,6 +96,22 @@ class UseCase(private val Repository: Repository) {
 
     fun getImageUrl(collection: String, recordId: String, fileName: String): String{
         return Repository.getImageUrl(collection = collection, id = recordId, image = fileName )
+    }
+
+    suspend fun otpRequest(data: RequestOtp): NetworkResult<ResponseOtp>{
+        return Repository.OtpRequest(data)
+    }
+
+    suspend fun otpAuth(data: OTPAuthRequest): NetworkResult<OTPAuthResponse>{
+        return Repository.OtpAuth(data)
+    }
+
+    suspend fun resetPass(data: PasswordResetRequest): NetworkResult<Unit>{
+        return Repository.ResetPass(data)
+    }
+
+    suspend fun changePass(id: String, data: RequestChangePass): NetworkResult<User>{
+        return Repository.patchPass(id,data)
     }
 
 }

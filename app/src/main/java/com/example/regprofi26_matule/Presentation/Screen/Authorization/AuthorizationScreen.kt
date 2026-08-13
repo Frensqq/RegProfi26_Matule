@@ -1,5 +1,7 @@
 package com.example.regprofi26_matule.Presentation.Screen.Authorization
 
+import android.util.Log
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -86,28 +88,35 @@ fun AuthorizationScreen(viewModel: AuthViewModel, navController: NavHostControll
 
         ButtonBig("Далее",
             {
-                viewModel.Auth(navController, true)
+                if (Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+                    Log.d("Auth", "email is correct")
+                    viewModel.Auth(navController, true)
+                } else {
+                    errorEmail = "Некорректный Email"
+                }
             },state.email!= "" && state.password!=""
             )
         SpacerH(13)
 
         ButtonBig("Регистрация",
             {
-                viewModel.Registration(navController)
-            },state.email!= "" && state.password!="")
+                if (Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+                    Log.d("Auth", "email is correct")
+                    viewModel.Registration(navController)
+                } else {
+                    errorEmail = "Некорректный Email"
+                }
+            }, state.email.isNotEmpty() && state.password.isNotEmpty())
         SpacerH(18)
 
         Text("Забыл пароль?", style = createMatuleTypography().textRegular, textAlign =  TextAlign.Center, color = MatuleTheme.colors.accent,
             modifier = Modifier.clickable{
-                if (state.email!=""){
-                    navController.navigate(NavigationRoutes.INPUT_CODE)
+                if (state.email!="" && Patterns.EMAIL_ADDRESS.matcher(state.email).matches()){
+                    viewModel.otpRequest(navController)
                 }
                 else{
                     errorEmail = "Введите email"
                 }
             })
-
     }
-
-
 }

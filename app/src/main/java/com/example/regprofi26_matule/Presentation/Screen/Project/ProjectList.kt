@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
+import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.uikit.Card.PrimaryCard
 import com.example.uikit.R
@@ -43,12 +44,9 @@ fun ProjectList(
 
     val state = viewModel.state
 
-    var launch by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        if (launch){
             viewModel.getProject()
-            launch = false
-        }
+
     }
 
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
@@ -119,18 +117,11 @@ fun ProjectList(
         contentAlignment = Alignment.BottomCenter) {
 
         Box(modifier = Modifier.background(Color.White)) {
-            TabBar({
-                viewModel.updateState(state.copy(tabBarState = "Главная"))
-                navController.navigate(NavigationRoutes.MAIN)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Каталог"))
-                navController.navigate(NavigationRoutes.CATALOG)
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Заказы"))
-            },{
-                viewModel.updateState(state.copy(tabBarState = "Профиль"))
-                navController.navigate(NavigationRoutes.PROFILE)
-            },state.tabBarState)
+
+            MainTabBar(
+                navController,
+                NavigationRoutes.PROJECT
+            )
         }
 
     }
