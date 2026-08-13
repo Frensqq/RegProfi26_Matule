@@ -1,5 +1,6 @@
 package com.example.regprofi26_matule.Presentation.Screen.Authorization
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -175,10 +176,13 @@ fun CreateProfileScreen(
     ) {
 
         ButtonBig(
-            "Создать + $errorDate",
+            if (errorDate!= null) "$errorDate" else "Создать",
             {
+
                 val ageValid = validAge(state.dateUser)
                 val phoneValid = validPhone(state.phone)
+
+                Log.d("Button State", "Age: " + ageValid + " Phone: " + phoneValid)
 
                 errorDate =
                     if (ageValid)

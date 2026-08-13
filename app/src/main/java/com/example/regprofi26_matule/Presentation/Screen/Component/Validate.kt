@@ -11,7 +11,7 @@ fun validAge(date: String): Boolean {
     return try {
         val birth = LocalDate.parse(
             date,
-            DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
         )
 
         !birth.plusYears(18).isAfter(LocalDate.now())
