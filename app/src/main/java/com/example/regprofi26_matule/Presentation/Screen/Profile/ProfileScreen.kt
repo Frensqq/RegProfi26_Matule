@@ -125,7 +125,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                     }
                 )
                 SpacerH(24)
-                Text("Политика конфиденциальности",
+                Text("Пользовательское соглашение",
                     style = createMatuleTypography().textMedium,
                     color = MatuleTheme.colors.placeholder,
                     modifier = Modifier.clickable{
