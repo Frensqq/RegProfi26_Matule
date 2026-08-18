@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.RegProfi26_Matule">
         <activity
-            android:name=".MainActivity"
+            android:name=".Presentation.Activity.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.RegProfi26_Matule"

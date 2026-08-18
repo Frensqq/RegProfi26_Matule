@@ -1,8 +1,7 @@
-package com.example.regprofi26_matule
+package com.example.regprofi26_matule.Presentation.Activity
 
 import android.Manifest
 import android.app.AlarmManager
-import android.app.AlarmManager.*
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,25 +10,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.netlibrary.network.NetworkMonitor
 import com.example.regprofi26_matule.DI.networkModule
 import com.example.regprofi26_matule.Domain.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.Navigation
 import com.example.regprofi26_matule.Presentation.Notification.NotificationReceiver
-import com.example.regprofi26_matule.ui.theme.RegProfi26_MatuleTheme
 import com.example.uikit.UI.MatuleTheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
 
@@ -87,7 +76,7 @@ class MainActivity : ComponentActivity() {
         )
 
         alarmManager.setAndAllowWhileIdle(
-            RTC_WAKEUP,
+            AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis() + 3 * 60 *1000,
             pendingIntent
         )
@@ -131,4 +120,3 @@ class MainActivity : ComponentActivity() {
         alarmManager.cancel(pendingIntent)
     }
 }
-
