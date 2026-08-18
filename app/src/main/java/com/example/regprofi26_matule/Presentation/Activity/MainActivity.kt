@@ -30,6 +30,16 @@ class MainActivity : ComponentActivity() {
         UserRepository.init(applicationContext)  //позже уберу, как переделаю UserRepository
         enableEdgeToEdge()
 
+        requestNotificationPermission()
+
+        setContent {
+            MatuleTheme {
+                Navigation(isOnline.value)
+            }
+        }
+    }
+
+    private fun requestNotificationPermission(){
         if (
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -39,12 +49,6 @@ class MainActivity : ComponentActivity() {
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 100
             )
-        }
-
-        setContent {
-            MatuleTheme {
-                Navigation(isOnline.value)
-            }
         }
     }
 
