@@ -12,13 +12,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import com.example.netlibrary.network.NetworkMonitor
-import com.example.regprofi26_matule.DI.networkModule
 import com.example.regprofi26_matule.Domain.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.Navigation
 import com.example.regprofi26_matule.Presentation.Notification.NotificationReceiver
 import com.example.uikit.UI.MatuleTheme
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
 
@@ -30,13 +27,7 @@ class MainActivity : ComponentActivity() {
         val networkModuleMonitor = NetworkMonitor(this)
         isOnline.value = networkModuleMonitor.isConnected()
 
-        startKoin {
-            androidContext(this@MainActivity)
-            modules(networkModule)
-        }
-
-        UserRepository.init(this)
-
+        UserRepository.init(applicationContext)  //позже уберу, как переделаю UserRepository
         enableEdgeToEdge()
 
         if (
