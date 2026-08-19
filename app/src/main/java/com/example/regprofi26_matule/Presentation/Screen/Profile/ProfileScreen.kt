@@ -1,6 +1,5 @@
 package com.example.regprofi26_matule.Presentation.Screen.Profile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,10 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,14 +27,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
-import com.example.regprofi26_matule.Domain.UserRepository
+import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.Screen.Component.MainTabBar
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.R
-import com.example.uikit.Buttons.ButtonBig
 import com.example.uikit.Controls.Toggle
-import com.example.uikit.Tabbar.TabBar
 import com.example.uikit.UI.MatuleTheme
 import com.example.uikit.UI.SpacerH
 import com.example.uikit.UI.SpacerW
@@ -55,7 +48,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             viewModel.getUser()
     }
 
-    var notification by remember { mutableStateOf(UserRepository.Notification) }
+    var notification = viewModel.checkNotificationEnabled()
     var document by remember {
         mutableStateOf<String?>(null)
     }
@@ -107,8 +100,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             }
 
             Toggle(notification) {
-                notification = it
-                UserRepository.Notification = it
+                viewModel.setNotification(it)
             }
         }
 
@@ -137,12 +129,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
                     style = createMatuleTypography().textMedium,
                     color = MatuleTheme.colors.error,
                     modifier = Modifier.clickable{
-                        UserRepository.Act = false
-                        UserRepository.Notification = false
-                        UserRepository.UserId = ""
-                        UserRepository.Pin = ""
-                        UserRepository.Token = ""
-                        UserRepository.Email = ""
+                        viewModel.logout()
 
                         navController.navigate(NavigationRoutes.AUTH){
                             popUpTo(navController.graph.startDestinationId) {

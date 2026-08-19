@@ -10,18 +10,19 @@ import com.example.netlibrary.domain.model.NetworkResult
 import com.example.netlibrary.domain.model.RequestAuth
 import com.example.netlibrary.domain.model.RequestRegister
 import com.example.netlibrary.domain.model.RequestUser
-import com.example.netlibrary.domain.model.User
 import com.example.netlibrary.domain.model.changePassword.OTPAuthRequest
-import com.example.netlibrary.domain.model.changePassword.PasswordResetRequest
 import com.example.netlibrary.domain.model.changePassword.RequestChangePass
 import com.example.netlibrary.domain.model.changePassword.RequestOtp
 import com.example.regprofi26_matule.Domain.UseCase
-import com.example.regprofi26_matule.Domain.UserRepository
+import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.State.AuthState
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val UseCase: UseCase): ViewModel() {
+class AuthViewModel(
+    private val UseCase: UseCase,
+    private val userRepository: UserRepository
+): ViewModel() {
 
     private val _state = mutableStateOf(AuthState())
     val state: AuthState get() = _state.value
@@ -43,8 +44,8 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
                     )
                 )){
                     is NetworkResult.Success -> {
-                        UserRepository.UserId = response.data.id
-                        UserRepository.Email = state.email
+                        userRepository.userId = response.data.id
+                        userRepository.email = state.email
                         Auth(navController, false) // необходимо для получения токена
                         Log.d("Reg", "Success registration")
                     }
@@ -78,10 +79,10 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
                     )
                 )){
                     is NetworkResult.Success -> {
-                        UserRepository.Act = true
-                        UserRepository.Token = response.data.token
-                        UserRepository.UserId = response.data.record.id
-                        PBApiServis.token = UserRepository.Token
+                        userRepository.act = true
+                        userRepository.token = response.data.token
+                        userRepository.userId = response.data.record.id
+                        PBApiServis.token = userRepository.token
                         if(isAuth){
                             navController.navigate(NavigationRoutes.CREATE_PIN)
                         }
@@ -110,11 +111,11 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
-                PBApiServis.token = UserRepository.Token
+                PBApiServis.token =userRepository.token
                 when(val response = UseCase.patchUser(
-                    UserRepository.UserId,
+                    userRepository.userId,
                     RequestUser(
-                        email = UserRepository.Email,
+                        email = userRepository.email,
                         emailVisibility = true,
                         firstname = state.name,
                         secondname = state.surname,
@@ -148,7 +149,7 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
-                PBApiServis.token = UserRepository.Token
+                PBApiServis.token = userRepository.token
                 when(val response = UseCase.otpRequest(
                     RequestOtp(
                         state.email
@@ -181,7 +182,7 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
-                PBApiServis.token = UserRepository.Token
+                PBApiServis.token = userRepository.token
                 when(val response = UseCase.otpAuth(
                     OTPAuthRequest(
                         state.responseOtp!!.otpId,
@@ -192,8 +193,8 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
                         updateState(state.copy(
                             responseAuthOtp = response.data
                         ))
-                        UserRepository.Token = response.data.token
-                        UserRepository.UserId = response.data.record.id
+                        userRepository.token = response.data.token
+                        userRepository.userId = response.data.record.id
                         navHostController.navigate(NavigationRoutes.CREATE_PASS)
                         Log.d("otpRequest ", "Success Patch User")
                     }
@@ -217,9 +218,9 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
-                PBApiServis.token = UserRepository.Token
+                PBApiServis.token = userRepository.token
                 when(val response = UseCase.changePass(
-                    UserRepository.UserId,
+                    userRepository.userId,
                     RequestChangePass(
                         password = state.password,
                         passwordConfirm = state.passwordConfirm
@@ -245,5 +246,11 @@ class AuthViewModel(private val UseCase: UseCase): ViewModel() {
         }
     }
 
+    fun savePin(pin: String){
+        userRepository.pin = pin
+    }
 
+    fun checkPin(pin: String): Boolean{
+        return userRepository.pin == pin
+    }
 }

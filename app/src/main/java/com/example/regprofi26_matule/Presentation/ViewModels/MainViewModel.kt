@@ -9,27 +9,24 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.netlibrary.data.remote.PBApi
 import com.example.netlibrary.data.remote.PBApiServis
 import com.example.netlibrary.domain.model.NetworkResult
-import com.example.netlibrary.domain.model.RequestAuth
 import com.example.netlibrary.domain.model.RequestCart
 import com.example.netlibrary.domain.model.RequestOrder
 import com.example.netlibrary.domain.model.RequestProject
-import com.example.netlibrary.domain.model.RequestRegister
-import com.example.netlibrary.domain.model.RequestUser
-import com.example.netlibrary.domain.model.User
 import com.example.regprofi26_matule.Domain.UseCase
-import com.example.regprofi26_matule.Domain.UserRepository
+import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
-import com.example.regprofi26_matule.Presentation.State.AuthState
 import com.example.regprofi26_matule.Presentation.State.MainState
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.io.copyTo
 
-class MainViewModel(private val UseCase: UseCase): ViewModel() {
+class MainViewModel(
+    private val UseCase: UseCase,
+    private val userRepository: UserRepository
+): ViewModel() {
 
     private val _state = mutableStateOf(MainState())
     val state: MainState get() = _state.value
@@ -44,9 +41,9 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
         viewModelScope.launch {
             updateState(state.copy(isLoading = true, error = null))
             try {
-                PBApiServis.token = UserRepository.Token
+                PBApiServis.token = userRepository.token
                 when(val response = UseCase.getUser(
-                    UserRepository.UserId
+                    userRepository.userId
                 )){
                     is NetworkResult.Success -> {
                         updateState(
@@ -107,11 +104,11 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
             updateState(state.copy(isLoading = true, error = null))
             try {
                 when(val response = UseCase.postProject(
-                    UserRepository.Token,
+                    userRepository.token,
                     RequestProject(
                         state.titleProject,
                         typeProject = state.typeProject,
-                        UserRepository.UserId,
+                        userRepository.userId,
                         dateStart = state.dateStart,
                         dateEnd = state.dateEnd,
                         gender = state.genderProject,
@@ -151,7 +148,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
             updateState(state.copy(isLoading = true, error = null))
             try {
                 when(val response = UseCase.getOrders(
-                    "user_id = '${UserRepository.UserId}'"
+                    "user_id = '${userRepository.userId}'"
                 )){
                     is NetworkResult.Success -> {
                         updateState(
@@ -254,7 +251,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
             updateState(state.copy(isLoading = true, error = null))
             try {
                 when(val response = UseCase.getCart(
-                    "user_id = '${UserRepository.UserId}'"
+                    "user_id = '${userRepository.userId}'"
                 )){
                     is NetworkResult.Success -> {
                         updateState(
@@ -318,7 +315,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
             try {
                 when(val response = UseCase.postBucket(
                     RequestCart(
-                        UserRepository.UserId,
+                        userRepository.userId,
                         productId,
                         1
                     )
@@ -354,7 +351,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
                 when(val response = UseCase.patchBucket(
                     state.currentCartId,
                     RequestCart(
-                        UserRepository.UserId,
+                        userRepository.userId,
                         state.currentProductId,
                         state.countProduct
                     )
@@ -402,7 +399,7 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
                 when (
                     val response = UseCase.postOrder(
                         RequestOrder(
-                            UserRepository.UserId,
+                            userRepository.userId,
                             productId,
                             count
                         )
@@ -574,5 +571,16 @@ class MainViewModel(private val UseCase: UseCase): ViewModel() {
     }
 
 
+    fun checkNotificationEnabled(): Boolean{
+        return userRepository.notification
+    }
+
+    fun setNotification(newValue: Boolean){
+        userRepository.notification = newValue
+    }
+
+    fun logout(){
+        userRepository.clear()
+    }
 
 }
