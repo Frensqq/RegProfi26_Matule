@@ -48,7 +48,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             viewModel.getUser()
     }
 
-    var notification = viewModel.checkNotificationEnabled()
+    var notification by remember { mutableStateOf(viewModel.checkNotificationEnabled())}
     var document by remember {
         mutableStateOf<String?>(null)
     }
@@ -100,6 +100,7 @@ fun ProfileScreen(viewModel: MainViewModel, navController: NavHostController){
             }
 
             Toggle(notification) {
+                notification = it
                 viewModel.setNotification(it)
             }
         }
