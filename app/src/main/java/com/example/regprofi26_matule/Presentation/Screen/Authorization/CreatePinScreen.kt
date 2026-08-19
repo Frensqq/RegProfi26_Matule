@@ -1,6 +1,5 @@
 package com.example.regprofi26_matule.Presentation.Screen.Authorization
 
-import android.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.regprofi26_matule.Domain.UserRepository
+import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.NavigationRoutes
 import com.example.regprofi26_matule.Presentation.Screen.Component.PinKeyboard
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
@@ -31,14 +30,21 @@ fun CreatePinScreen(naController: NavHostController, viewModel: AuthViewModel, s
     var pinCode by remember { mutableStateOf("") }
 
     LaunchedEffect(pinCode) {
-        if (pinCode.length == 4){
-            if (stateScreen){
-                UserRepository.Pin = pinCode
-                naController.navigate(NavigationRoutes.MAIN)
-            }
-            else{
-                if (UserRepository.Pin == pinCode){
-                    naController.navigate(NavigationRoutes.MAIN )
+
+        if (pinCode.length == 4) {
+
+            if (stateScreen) {
+                viewModel.savePin(pinCode)
+                naController.navigate(
+                    NavigationRoutes.MAIN
+                )
+
+            } else {
+
+                if (viewModel.checkPin(pinCode)) {
+                    naController.navigate(
+                        NavigationRoutes.MAIN
+                    )
                 }
             }
         }

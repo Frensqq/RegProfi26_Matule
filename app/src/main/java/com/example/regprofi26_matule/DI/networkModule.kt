@@ -6,6 +6,8 @@ import com.example.netlibrary.data.repository.PBRepository
 import com.example.netlibrary.domain.repository.Repository
 import com.example.netlibrary.network.IsConnect
 import com.example.netlibrary.network.NetworkMonitor
+import com.example.regprofi26_matule.Data.Repository.UserRepositoryImpl
+import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Domain.UseCase
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
@@ -26,10 +28,14 @@ val networkModule = module{
         androidContext()
     ) }
 
+    single<UserRepository> {
+        UserRepositoryImpl(androidContext())
+    }
+
     factory { UseCase(get()) }
 
-    viewModel{ SplashViewModel() }
-    viewModel{ AuthViewModel(get()) }
-    viewModel{ MainViewModel(get()) }
+    viewModel{ SplashViewModel(get()) }
+    viewModel{ AuthViewModel(get(), get()) }
+    viewModel{ MainViewModel(get(), get()) }
 
 }
