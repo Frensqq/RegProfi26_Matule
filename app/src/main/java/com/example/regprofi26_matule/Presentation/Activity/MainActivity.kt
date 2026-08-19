@@ -16,8 +16,11 @@ import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.Navigation
 import com.example.regprofi26_matule.Presentation.Notification.NotificationReceiver
 import com.example.uikit.UI.MatuleTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val userRepository: UserRepository by inject()
 
     val isOnline = mutableStateOf(false)
 
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity() {
 
         if (
             !isChangingConfigurations &&
-            UserRepository.Notification
+            userRepository.notification
         ) {
             scheduleNotification()
         }
