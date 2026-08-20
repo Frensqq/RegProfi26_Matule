@@ -6,9 +6,12 @@ import com.example.netlibrary.data.repository.PBRepository
 import com.example.netlibrary.domain.repository.Repository
 import com.example.netlibrary.network.IsConnect
 import com.example.netlibrary.network.NetworkMonitor
+import com.example.regprofi26_matule.Data.Notification.NotificationSchedulerImpl
 import com.example.regprofi26_matule.Data.Repository.UserRepositoryImpl
+import com.example.regprofi26_matule.Domain.Notification.NotificationScheduler
 import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Domain.UseCase
+import com.example.regprofi26_matule.Presentation.ViewModels.AppViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.AuthViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.MainViewModel
 import com.example.regprofi26_matule.Presentation.ViewModels.SplashViewModel
@@ -28,6 +31,12 @@ val networkModule = module{
         androidContext()
     ) }
 
+    single<NotificationScheduler> {
+        NotificationSchedulerImpl(
+            androidContext()
+        )
+    }
+
     single<UserRepository> {
         UserRepositoryImpl(androidContext())
     }
@@ -37,5 +46,12 @@ val networkModule = module{
     viewModel{ SplashViewModel(get()) }
     viewModel{ AuthViewModel(get(), get()) }
     viewModel{ MainViewModel(get(), get()) }
+    viewModel {
+        AppViewModel(
+            get(),
+            get(),
+            get()
+        )
+    }
 
 }

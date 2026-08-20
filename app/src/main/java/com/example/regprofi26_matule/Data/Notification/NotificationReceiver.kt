@@ -1,4 +1,4 @@
-package com.example.regprofi26_matule.Presentation.Notification
+package com.example.regprofi26_matule.Data.Notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

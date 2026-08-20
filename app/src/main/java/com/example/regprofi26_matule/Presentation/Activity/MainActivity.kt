@@ -10,25 +10,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.example.netlibrary.network.NetworkMonitor
 import com.example.regprofi26_matule.Domain.Repository.UserRepository
 import com.example.regprofi26_matule.Presentation.Navigation.Navigation
-import com.example.regprofi26_matule.Presentation.Notification.NotificationReceiver
+import com.example.regprofi26_matule.Data.Notification.NotificationReceiver
+import com.example.regprofi26_matule.Presentation.ViewModels.AppViewModel
 import com.example.uikit.UI.MatuleTheme
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val userRepository: UserRepository by inject()
+    private val viewModel: AppViewModel by viewModel()
 
-    val isOnline = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val networkModuleMonitor = NetworkMonitor(this)
-        isOnline.value = networkModuleMonitor.isConnected()
 
         enableEdgeToEdge()
 
@@ -36,7 +37,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MatuleTheme {
-                Navigation(isOnline.value)
+
+                val isOnline by
+                viewModel.isOnline.collectAsState()
+
+                Navigation(isOnline)
             }
         }
     }
@@ -54,66 +59,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun scheduleNotification() {
 
-        val alarmManager =
-            getSystemService(ALARM_SERVICE) as AlarmManager
-
-        val intent = Intent(
-            this,
-            NotificationReceiver::class.java
-        )
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            100,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or
-                    PendingIntent.FLAG_IMMUTABLE
-        )
-
-        alarmManager.setAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + 3 * 60 *1000,
-            pendingIntent
-        )
-    }
 
     override fun onStop() {
         super.onStop()
-
-        if (
-            !isChangingConfigurations &&
-            userRepository.notification
-        ) {
-            scheduleNotification()
+        if (!isChangingConfigurations) {
+            viewModel.onAppStopped()
         }
     }
 
     override fun onStart() {
         super.onStart()
 
-        cancelNotification()
+        viewModel.onAppStarted()
+
     }
 
-    private fun cancelNotification() {
-
-        val alarmManager =
-            getSystemService(ALARM_SERVICE) as AlarmManager
-
-        val intent = Intent(
-            this,
-            NotificationReceiver::class.java
-        )
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            100,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or
-                    PendingIntent.FLAG_IMMUTABLE
-        )
-
-        alarmManager.cancel(pendingIntent)
-    }
 }
