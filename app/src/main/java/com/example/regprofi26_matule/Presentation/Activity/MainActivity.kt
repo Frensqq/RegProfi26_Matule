@@ -38,8 +38,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MatuleTheme {
 
-                val isOnline by
-                viewModel.isOnline.collectAsState()
+                val isOnline by viewModel.isOnline.collectAsState()
 
                 Navigation(isOnline)
             }

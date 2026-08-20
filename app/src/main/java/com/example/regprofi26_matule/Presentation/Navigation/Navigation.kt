@@ -13,6 +13,7 @@ import com.example.regprofi26_matule.Presentation.Screen.Authorization.InputEmai
 import com.example.regprofi26_matule.Presentation.Screen.Market.CartScreen
 import com.example.regprofi26_matule.Presentation.Screen.Market.CatalogScreen
 import com.example.regprofi26_matule.Presentation.Screen.Market.MainScreen
+import com.example.regprofi26_matule.Presentation.Screen.NoInternetScreen
 import com.example.regprofi26_matule.Presentation.Screen.Profile.ListOrder
 import com.example.regprofi26_matule.Presentation.Screen.Profile.ProfileScreen
 import com.example.regprofi26_matule.Presentation.Screen.Project.CreateProjectScreen
@@ -80,5 +81,9 @@ fun Navigation(isOnline: Boolean){
         composable(NavigationRoutes.OPEN_PROJECT){
             OpenProject(mainViewModel,navController)
         }
+    }
+
+    if (!isOnline) {
+        NoInternetScreen()
     }
 }
